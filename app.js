@@ -1,68 +1,197 @@
-const POSITIONS = [
-  { id: "1", label: "一把位" },
-  { id: "2", label: "二把位" },
-  { id: "3", label: "三把位" },
-  { id: "4", label: "四把位" },
-  { id: "5", label: "五把位" },
-  { id: "6", label: "六把位" },
-  { id: "7", label: "七把位" },
-];
+const SCALE_LENGTH_DEFAULT = 325;
+const MAX_SEMITONE_DEFAULT = 12;
+const STORAGE_KEY = "violin-formula-fingerboard-v1";
 
-const MAJOR_KEYS = [
-  { id: "c", label: "C" },
-  { id: "g", label: "G" },
-  { id: "d", label: "D" },
-  { id: "a", label: "A" },
-  { id: "e", label: "E" },
-  { id: "b", label: "B" },
-  { id: "fs", label: "#F" },
-  { id: "gb", label: "♭G" },
-  { id: "db", label: "♭D" },
-  { id: "ab", label: "♭A" },
-  { id: "eb", label: "♭E" },
-  { id: "bb", label: "♭B" },
-  { id: "f", label: "F" },
-];
+const LETTERS = ["C", "D", "E", "F", "G", "A", "B"];
+const LETTER_PC = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 };
 
-const MINOR_KEYS = [
-  { id: "a", label: "A", sourceMajor: "c", sourceMajorLabel: "C" },
-  { id: "e", label: "E", sourceMajor: "g", sourceMajorLabel: "G" },
-  { id: "b", label: "B", sourceMajor: "d", sourceMajorLabel: "D" },
-  { id: "fs", label: "#F", sourceMajor: "a", sourceMajorLabel: "A" },
-  { id: "cs", label: "#C", sourceMajor: "e", sourceMajorLabel: "E" },
-  { id: "gs", label: "#G", sourceMajor: "b", sourceMajorLabel: "B" },
-  { id: "ds", label: "#D", sourceMajor: "fs", sourceMajorLabel: "#F" },
-  { id: "eb", label: "♭E", sourceMajor: "gb", sourceMajorLabel: "♭G" },
-  { id: "bb", label: "♭B", sourceMajor: "db", sourceMajorLabel: "♭D" },
-  { id: "f", label: "F", sourceMajor: "ab", sourceMajorLabel: "♭A" },
-  { id: "c", label: "C", sourceMajor: "eb", sourceMajorLabel: "♭E" },
-  { id: "g", label: "G", sourceMajor: "bb", sourceMajorLabel: "♭B" },
-  { id: "d", label: "D", sourceMajor: "f", sourceMajorLabel: "F" },
-];
-
-const DEFAULTS = {
-  mode: "major",
-  majorTonic: "c",
-  minorTonic: "a",
-  position: "1",
+const MODES = {
+  major: {
+    label: "大调",
+    formula: "{0, 2, 4, 5, 7, 9, 11}",
+    intervals: [0, 2, 4, 5, 7, 9, 11],
+    keys: [
+      { id: "c", label: "C", pc: 0, letter: "C" },
+      { id: "g", label: "G", pc: 7, letter: "G" },
+      { id: "d", label: "D", pc: 2, letter: "D" },
+      { id: "a", label: "A", pc: 9, letter: "A" },
+      { id: "e", label: "E", pc: 4, letter: "E" },
+      { id: "b", label: "B", pc: 11, letter: "B" },
+      { id: "fs", label: "F♯", pc: 6, letter: "F" },
+      { id: "cs", label: "C♯", pc: 1, letter: "C" },
+      { id: "f", label: "F", pc: 5, letter: "F" },
+      { id: "bb", label: "B♭", pc: 10, letter: "B" },
+      { id: "eb", label: "E♭", pc: 3, letter: "E" },
+      { id: "ab", label: "A♭", pc: 8, letter: "A" },
+      { id: "db", label: "D♭", pc: 1, letter: "D" },
+      { id: "gb", label: "G♭", pc: 6, letter: "G" },
+      { id: "cb", label: "C♭", pc: 11, letter: "C" },
+    ],
+  },
+  minor: {
+    label: "小调",
+    formula: "{0, 2, 3, 5, 7, 8, 10}",
+    intervals: [0, 2, 3, 5, 7, 8, 10],
+    keys: [
+      { id: "a", label: "A", pc: 9, letter: "A" },
+      { id: "e", label: "E", pc: 4, letter: "E" },
+      { id: "b", label: "B", pc: 11, letter: "B" },
+      { id: "fs", label: "F♯", pc: 6, letter: "F" },
+      { id: "cs", label: "C♯", pc: 1, letter: "C" },
+      { id: "gs", label: "G♯", pc: 8, letter: "G" },
+      { id: "ds", label: "D♯", pc: 3, letter: "D" },
+      { id: "as", label: "A♯", pc: 10, letter: "A" },
+      { id: "d", label: "D", pc: 2, letter: "D" },
+      { id: "g", label: "G", pc: 7, letter: "G" },
+      { id: "c", label: "C", pc: 0, letter: "C" },
+      { id: "f", label: "F", pc: 5, letter: "F" },
+      { id: "bb", label: "B♭", pc: 10, letter: "B" },
+      { id: "eb", label: "E♭", pc: 3, letter: "E" },
+      { id: "ab", label: "A♭", pc: 8, letter: "A" },
+    ],
+  },
 };
 
-const STORAGE_KEY = "violin-position-filter";
+const STRINGS = [
+  { name: "G", openLabel: "G3", pc: 7, width: 4.2 },
+  { name: "D", openLabel: "D4", pc: 2, width: 3.6 },
+  { name: "A", openLabel: "A4", pc: 9, width: 3 },
+  { name: "E", openLabel: "E5", pc: 4, width: 2.4 },
+];
+
+const DEFAULT_FINGER_LINES = [
+  { finger: "1", semitone: 2 },
+  { finger: "2", semitone: 4 },
+  { finger: "3", semitone: 5 },
+  { finger: "4", semitone: 7 },
+];
+
+const KEY_COLORS = [
+  "#0b7887",
+  "#bd4f6c",
+  "#5c7cfa",
+  "#d97706",
+  "#5f7f39",
+  "#b13d75",
+  "#2f8f83",
+  "#7b61c7",
+  "#c65d32",
+  "#2d6a9f",
+  "#9b6b20",
+  "#50724f",
+  "#bc5274",
+  "#397c89",
+  "#8a6a39",
+];
+
+const filters = document.querySelector("#filters");
+const tonicSelect = document.querySelector("#tonic");
+const rangeSelect = document.querySelector("#range");
+const scaleLengthInput = document.querySelector("#scale-length");
+const resultTitle = document.querySelector("#result-title");
+const formulaNote = document.querySelector("#formula-note");
+const results = document.querySelector("#results");
+const resetButton = document.querySelector("#reset");
+
+function mod12(value) {
+  return ((value % 12) + 12) % 12;
+}
+
+function fingerDistanceMm(semitone, scaleLength) {
+  return scaleLength * (1 - 2 ** (-semitone / 12));
+}
+
+function accidentalText(delta) {
+  if (delta === -2) return "𝄫";
+  if (delta === -1) return "♭";
+  if (delta === 1) return "♯";
+  if (delta === 2) return "𝄪";
+  if (delta < -2) return "♭".repeat(Math.abs(delta));
+  if (delta > 2) return "♯".repeat(delta);
+  return "";
+}
+
+function signedPitchDelta(targetPc, naturalPc) {
+  let delta = mod12(targetPc - naturalPc);
+  if (delta > 6) delta -= 12;
+  return delta;
+}
+
+function nextLetter(rootLetter, steps) {
+  const start = LETTERS.indexOf(rootLetter);
+  return LETTERS[(start + steps) % LETTERS.length];
+}
+
+function buildScale(key, mode) {
+  return mode.intervals.map((interval, index) => {
+    const letter = nextLetter(key.letter, index);
+    const pc = mod12(key.pc + interval);
+    const accidental = signedPitchDelta(pc, LETTER_PC[letter]);
+
+    return {
+      degree: index + 1,
+      interval,
+      pc,
+      label: `${letter}${accidentalText(accidental)}`,
+    };
+  });
+}
+
+function getModeId() {
+  const value = new FormData(filters).get("mode");
+  return MODES[value] ? value : "major";
+}
+
+function getMode() {
+  return MODES[getModeId()] || MODES.major;
+}
+
+function getMaxSemitone() {
+  const parsed = Number(rangeSelect.value);
+  return Number.isFinite(parsed) ? parsed : MAX_SEMITONE_DEFAULT;
+}
+
+function getScaleLength() {
+  const parsed = Number(scaleLengthInput.value);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : SCALE_LENGTH_DEFAULT;
+}
+
+function fillTonicOptions(modeId, preferredValue = "all") {
+  const keys = MODES[modeId].keys;
+  tonicSelect.replaceChildren();
+
+  const allOption = document.createElement("option");
+  allOption.value = "all";
+  allOption.textContent = "全部调";
+  tonicSelect.append(allOption);
+
+  for (const key of keys) {
+    const option = document.createElement("option");
+    option.value = key.id;
+    option.textContent = key.label;
+    tonicSelect.append(option);
+  }
+
+  tonicSelect.value = preferredValue === "all" || keys.some((key) => key.id === preferredValue)
+    ? preferredValue
+    : "all";
+}
 
 function loadSavedState() {
   try {
     const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
     if (!saved || typeof saved !== "object") return null;
-    const mode = saved.mode === "minor" ? "minor" : "major";
-    const keys = mode === "minor" ? MINOR_KEYS : MAJOR_KEYS;
+
+    const modeId = ["naturalMinor", "harmonicMinor", "melodicMinor"].includes(saved.mode)
+      ? "minor"
+      : MODES[saved.mode] ? saved.mode : "major";
     return {
-      mode,
-      tonic: keys.some((key) => key.id === saved.tonic)
-        ? saved.tonic
-        : mode === "minor" ? DEFAULTS.minorTonic : DEFAULTS.majorTonic,
-      position: saved.position === "all" || POSITIONS.some((p) => p.id === saved.position)
-        ? saved.position
-        : DEFAULTS.position,
+      mode: modeId,
+      tonic: typeof saved.tonic === "string" ? saved.tonic : "all",
+      range: ["12", "17", "24"].includes(String(saved.range)) ? String(saved.range) : String(MAX_SEMITONE_DEFAULT),
+      scaleLength: Number.isFinite(Number(saved.scaleLength))
+        ? String(saved.scaleLength)
+        : String(SCALE_LENGTH_DEFAULT),
     };
   } catch {
     return null;
@@ -73,256 +202,191 @@ function saveState() {
   try {
     localStorage.setItem(
       STORAGE_KEY,
-      JSON.stringify({ mode: getMode(), tonic: tonicSelect.value, position: positionSelect.value })
+      JSON.stringify({
+        mode: getModeId(),
+        tonic: tonicSelect.value,
+        range: rangeSelect.value,
+        scaleLength: scaleLengthInput.value,
+      })
     );
   } catch {
-    /* 隐私模式下 localStorage 可能不可用，忽略 */
+    /* localStorage 不可用时忽略。 */
   }
 }
 
-const filters = document.querySelector("#filters");
-const tonicSelect = document.querySelector("#tonic");
-const positionSelect = document.querySelector("#position");
-const resultTitle = document.querySelector("#result-title");
-const results = document.querySelector("#results");
-const resetButton = document.querySelector("#reset");
-const minorNote = document.querySelector("#minor-note");
-
-function getMode() {
-  return new FormData(filters).get("mode");
+function selectedKeys(modeId) {
+  const keys = MODES[modeId].keys;
+  if (tonicSelect.value === "all") return keys;
+  return keys.filter((key) => key.id === tonicSelect.value);
 }
 
-function getKeysForMode(mode) {
-  return mode === "minor" ? MINOR_KEYS : MAJOR_KEYS;
+function scaleByPitchClass(scale) {
+  return new Map(scale.map((note) => [note.pc, note]));
 }
 
-function fillTonicOptions(mode, preferredValue) {
-  const keys = getKeysForMode(mode);
-  const fallback = mode === "minor" ? DEFAULTS.minorTonic : DEFAULTS.majorTonic;
-  tonicSelect.replaceChildren();
+function noteMarkersForString(string, scaleMap, maxSemitone, scaleLength) {
+  const markers = [];
 
-  for (const key of keys) {
-    const option = document.createElement("option");
-    option.value = key.id;
-    option.textContent = key.label;
-    tonicSelect.append(option);
+  for (let semitone = 0; semitone <= maxSemitone; semitone += 1) {
+    const pc = mod12(string.pc + semitone);
+    const note = scaleMap.get(pc);
+    if (!note) continue;
+
+    markers.push({
+      ...note,
+      semitone,
+      distanceMm: fingerDistanceMm(semitone, scaleLength),
+      isOpen: semitone === 0,
+    });
   }
 
-  tonicSelect.value = keys.some((key) => key.id === preferredValue) ? preferredValue : fallback;
-}
-
-/* ===== SVG 指法图绘制（按截图海报规范重绘） ===== */
-
-const LETTER_PC = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 };
-
-// 各大调音阶（与海报一致的记谱：升号调用 #，降号调用 ♭）
-const MAJOR_SCALES = {
-  c: ["C", "D", "E", "F", "G", "A", "B"],
-  g: ["G", "A", "B", "C", "D", "E", "#F"],
-  d: ["D", "E", "#F", "G", "A", "B", "#C"],
-  a: ["A", "B", "#C", "D", "E", "#F", "#G"],
-  e: ["E", "#F", "#G", "A", "B", "#C", "#D"],
-  b: ["B", "#C", "#D", "E", "#F", "#G", "#A"],
-  fs: ["#F", "#G", "#A", "B", "#C", "#D", "#E"],
-  gb: ["♭G", "♭A", "♭B", "♭C", "♭D", "♭E", "F"],
-  db: ["♭D", "♭E", "F", "♭G", "♭A", "♭B", "C"],
-  ab: ["♭A", "♭B", "C", "♭D", "♭E", "F", "G"],
-  eb: ["♭E", "F", "G", "♭A", "♭B", "C", "D"],
-  bb: ["♭B", "C", "D", "♭E", "F", "G", "A"],
-  f: ["F", "G", "A", "♭B", "C", "D", "E"],
-};
-
-// 每个调一种底色（呼应海报配色）
-const KEY_COLORS = {
-  c: "#3aa6b9", g: "#7cb342", d: "#5c9ce6", a: "#e2703a", e: "#c2588f",
-  b: "#4db6ac", fs: "#8d7bd8", gb: "#5fb0a0", db: "#d98e32", ab: "#e06a5a",
-  eb: "#6aa84f", bb: "#b96ab0", f: "#e0a02e",
-};
-
-const STRINGS = [
-  { name: "G", pc: 7 },
-  { name: "D", pc: 2 },
-  { name: "A", pc: 9 },
-  { name: "E", pc: 4 },
-];
-
-function noteLabelToPc(label) {
-  const accidental = label[0] === "#" ? 1 : label[0] === "♭" ? -1 : 0;
-  const letter = accidental === 0 ? label[0] : label[1];
-  return ((LETTER_PC[letter] + accidental) % 12 + 12) % 12;
-}
-
-// 某弦上、某把位的 4 个音（1~4 指）：
-// 第 n 把位的一指按空弦上方第 n 个音阶音，依次取 4 个连续音阶音
-function stringNotesForPosition(stringPc, scale, position) {
-  const all = [];
-  for (let offset = 1; all.length < position + 4; offset += 1) {
-    const pc = (stringPc + offset) % 12;
-    const note = scale.find((n) => n.pc === pc);
-    if (note) all.push({ ...note, offset });
-  }
-  return all.slice(position - 1, position + 3);
+  return markers;
 }
 
 function escapeXml(text) {
-  return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  return String(text)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
 }
 
-function makeDiagramSvg(majorId, position) {
-  const scale = MAJOR_SCALES[majorId].map((label) => ({ label, pc: noteLabelToPc(label) }));
-  const tonicPc = scale[0].pc;
-  const color = KEY_COLORS[majorId];
-  const columns = STRINGS.map((s) => ({ ...s, notes: stringNotesForPosition(s.pc, scale, position) }));
+function makeFingerboardSvg(key, keyIndex, mode, maxSemitone, scaleLength) {
+  const scale = buildScale(key, mode);
+  const scaleMap = scaleByPitchClass(scale);
+  const width = 420;
+  const top = 112;
+  const stringGap = 62;
+  const left = 116;
+  const boardHeight = maxSemitone > 17 ? 760 : maxSemitone > 12 ? 640 : 520;
+  const height = top + boardHeight + 72;
+  const boardLeft = 82;
+  const boardRight = left + stringGap * (STRINGS.length - 1) + 34;
+  const boardTop = top - 28;
+  const boardBottom = top + boardHeight + 28;
+  const xMax = fingerDistanceMm(maxSemitone, scaleLength);
+  const keyColor = KEY_COLORS[keyIndex % KEY_COLORS.length];
+  const xs = STRINGS.map((_, index) => left + index * stringGap);
 
-  const offsets = columns.flatMap((c) => c.notes.map((n) => n.offset));
-  const minOff = Math.min(...offsets);
-  const maxOff = Math.max(...offsets);
-  const pxPerSemi = 30;
-  const top = 96;
-  const width = 320;
-  const xs = [56, 126, 196, 266];
-  const height = top + (maxOff - minOff) * pxPerSemi + 48;
-  const y = (offset) => top + (offset - minOff) * pxPerSemi;
+  const yFor = (semitone) => {
+    const distance = fingerDistanceMm(semitone, scaleLength);
+    return top + (distance / xMax) * boardHeight;
+  };
 
   const parts = [];
-  parts.push(`<svg class="diagram-svg" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg" role="img">`);
-  // 底色 + 顶部弦名条
-  parts.push(`<rect x="0" y="0" width="${width}" height="${height}" rx="10" fill="${color}"/>`);
-  parts.push(`<rect x="14" y="14" width="${width - 28}" height="34" rx="6" fill="rgba(16,24,32,0.82)"/>`);
-  for (let i = 0; i < 4; i += 1) {
-    parts.push(`<text x="${xs[i]}" y="38" text-anchor="middle" font-size="20" font-weight="800" fill="#ffffff">${STRINGS[i].name}</text>`);
-  }
-  // 把位水印
-  parts.push(`<text x="${width / 2}" y="${top + ((maxOff - minOff) * pxPerSemi) / 2 + 50}" text-anchor="middle" font-size="150" font-weight="900" fill="rgba(255,255,255,0.22)">${position}</text>`);
-  // 琴弦
-  for (const x of xs) {
-    parts.push(`<line x1="${x}" y1="56" x2="${x}" y2="${height - 18}" stroke="rgba(255,255,255,0.85)" stroke-width="3"/>`);
-  }
-  // 同一半音高度的横向参考线
-  for (let off = minOff; off <= maxOff; off += 1) {
-    parts.push(`<line x1="${xs[0]}" y1="${y(off)}" x2="${xs[3]}" y2="${y(off)}" stroke="rgba(255,255,255,0.28)" stroke-width="1"/>`);
-  }
-  // 音名圆圈（主音黑底白字）
-  for (let i = 0; i < 4; i += 1) {
-    for (const note of columns[i].notes) {
-      const isTonic = note.pc === tonicPc;
-      const cy = y(note.offset);
-      const fill = isTonic ? "#171a1d" : "#fffdf6";
-      const textColor = isTonic ? "#ffffff" : "#1c2530";
-      parts.push(`<circle cx="${xs[i]}" cy="${cy}" r="19" fill="${fill}" stroke="rgba(20,28,36,0.55)" stroke-width="2"/>`);
-      parts.push(`<text x="${xs[i]}" y="${cy + 5.5}" text-anchor="middle" font-size="${note.label.length > 1 ? 14 : 16}" font-weight="800" fill="${textColor}">${escapeXml(note.label)}</text>`);
+  parts.push(`<svg class="fingerboard-svg" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg" role="img">`);
+  parts.push(`<title>${escapeXml(key.label)}${mode.label}小提琴指板公式图</title>`);
+  parts.push(`<rect x="0" y="0" width="${width}" height="${height}" rx="18" fill="#fffdf6"/>`);
+  parts.push(`<rect x="${boardLeft}" y="${boardTop}" width="${boardRight - boardLeft}" height="${boardBottom - boardTop}" rx="28" fill="#2a211d"/>`);
+  parts.push(`<rect x="${boardLeft + 8}" y="${boardTop + 8}" width="${boardRight - boardLeft - 16}" height="${boardBottom - boardTop - 16}" rx="21" fill="#3b2c25"/>`);
+  parts.push(`<line x1="${boardLeft + 12}" y1="${top}" x2="${boardRight - 12}" y2="${top}" stroke="#f4ead9" stroke-width="9" stroke-linecap="round"/>`);
+
+  for (let semitone = 0; semitone <= maxSemitone; semitone += 1) {
+    const y = yFor(semitone);
+    const strong = semitone % 12 === 0;
+    parts.push(
+      `<line x1="${boardLeft + 14}" y1="${y.toFixed(2)}" x2="${boardRight - 14}" y2="${y.toFixed(2)}" stroke="#f8efe2" stroke-opacity="${strong ? 0.34 : 0.15}" stroke-width="${strong ? 2 : 1}"/>`
+    );
+    if (semitone % 12 === 0) {
+      parts.push(`<text x="${boardLeft - 18}" y="${(y + 4).toFixed(2)}" text-anchor="middle" font-size="13" font-weight="700" fill="#6a5a4d">${semitone}</text>`);
     }
   }
+
+  for (const line of DEFAULT_FINGER_LINES) {
+    if (line.semitone > maxSemitone) continue;
+
+    const y = yFor(line.semitone);
+    parts.push(
+      `<line x1="${boardLeft + 14}" y1="${y.toFixed(2)}" x2="${boardRight - 14}" y2="${y.toFixed(2)}" stroke="#f4bd27" stroke-opacity="0.92" stroke-width="2.5" stroke-dasharray="7 6"/>`
+    );
+    parts.push(`<rect x="${boardRight + 8}" y="${(y - 12).toFixed(2)}" width="42" height="24" rx="12" fill="#f4bd27" stroke="#9b6b20" stroke-width="1"/>`);
+    parts.push(`<text x="${boardRight + 29}" y="${(y + 4).toFixed(2)}" text-anchor="middle" font-size="12" font-weight="900" fill="#36240f">${line.finger}指</text>`);
+  }
+
+  for (let i = 0; i < STRINGS.length; i += 1) {
+    const string = STRINGS[i];
+    const x = xs[i];
+    const markers = noteMarkersForString(string, scaleMap, maxSemitone, scaleLength);
+
+    parts.push(`<text x="${x}" y="${top - 52}" text-anchor="middle" font-size="22" font-weight="900" fill="#16202a">${string.name}</text>`);
+    parts.push(`<text x="${x}" y="${top - 34}" text-anchor="middle" font-size="12" font-weight="800" fill="#7a6b5e">${string.openLabel}</text>`);
+    parts.push(
+      `<line x1="${x}" y1="${top}" x2="${x}" y2="${top + boardHeight}" stroke="#e8d8bf" stroke-width="${string.width}" stroke-linecap="round"/>`
+    );
+
+    for (const marker of markers) {
+      const y = yFor(marker.semitone);
+      const isTonic = marker.degree === 1;
+      const radius = maxSemitone > 17 ? 9.5 : 12.5;
+      const labelSize = marker.label.length > 2 ? 8.5 : 10.5;
+      const fill = isTonic ? "#14191f" : keyColor;
+      const text = isTonic ? "#ffffff" : "#fffdf6";
+      const degreeFill = isTonic ? keyColor : "#ffffff";
+      const degreeText = isTonic ? "#ffffff" : "#24313c";
+
+      parts.push(`<g class="note-dot">`);
+      parts.push(
+        `<title>${escapeXml(`${string.name}弦 ${marker.label}，音级${marker.degree}，n=${marker.semitone}，距上枕 ${marker.distanceMm.toFixed(1)} mm`)}</title>`
+      );
+      parts.push(
+        `<circle cx="${x}" cy="${y.toFixed(2)}" r="${radius}" fill="${fill}" stroke="#fff7ec" stroke-width="2.2"/>`
+      );
+      parts.push(
+        `<text x="${x}" y="${(y + 3.4).toFixed(2)}" text-anchor="middle" font-size="${labelSize}" font-weight="900" fill="${text}">${escapeXml(marker.label)}</text>`
+      );
+      parts.push(
+        `<circle cx="${(x + radius - 1).toFixed(2)}" cy="${(y - radius + 2).toFixed(2)}" r="6.5" fill="${degreeFill}" stroke="${fill}" stroke-width="1.4"/>`
+      );
+      parts.push(
+        `<text x="${(x + radius - 1).toFixed(2)}" y="${(y - radius + 5).toFixed(2)}" text-anchor="middle" font-size="8.5" font-weight="900" fill="${degreeText}">${marker.degree}</text>`
+      );
+      parts.push(`</g>`);
+    }
+  }
+
+  parts.push(`<text x="28" y="28" font-size="18" font-weight="900" fill="#16202a">${escapeXml(key.label)} ${mode.label}</text>`);
+  parts.push(`<text x="28" y="50" font-size="12" font-weight="700" fill="#687684">T + ${escapeXml(mode.formula)}</text>`);
+  parts.push(`<text x="28" y="${height - 22}" font-size="12" font-weight="700" fill="#687684">x(n)=L0×(1-2^(-n/12))</text>`);
   parts.push("</svg>");
   return parts.join("");
 }
 
-function getSelectedKey(mode) {
-  return getKeysForMode(mode).find((key) => key.id === tonicSelect.value);
-}
-
-function getSelectedPositions() {
-  if (positionSelect.value === "all") {
-    return POSITIONS;
-  }
-
-  return POSITIONS.filter((position) => position.id === positionSelect.value);
-}
-
-function buildMatches(mode, key, positions) {
-  return positions.map((position) => {
-    const isMinor = mode === "minor";
-    const sourceMajor = isMinor ? key.sourceMajor : key.id;
-    const sourceMajorLabel = isMinor ? key.sourceMajorLabel : key.label;
-    const modeLabel = isMinor ? "小调" : "大调";
-    const relativeMinor = MINOR_KEYS.find((minorKey) => minorKey.sourceMajor === sourceMajor);
-
-    return {
-      keyTitle: `${key.label}${modeLabel}`,
-      positionLabel: position.label,
-      sourceLabel: `${sourceMajorLabel}大调图块`,
-      pairLabel: isMinor
-        ? `关系大调 ${sourceMajorLabel}`
-        : relativeMinor
-          ? `关系小调 ${relativeMinor.label}`
-          : "",
-      svg: makeDiagramSvg(sourceMajor, Number(position.id)),
-      alt: `${position.label} ${key.label}${modeLabel} 指法图`,
-    };
-  });
-}
-
-function render() {
-  const mode = getMode();
-  const key = getSelectedKey(mode);
-  const positions = getSelectedPositions();
-
-  if (!key) {
-    results.replaceChildren();
-    resultTitle.textContent = "没有匹配结果";
-    return;
-  }
-
-  const matches = buildMatches(mode, key, positions);
-  const modeLabel = mode === "minor" ? "小调" : "大调";
-  const positionLabel = positionSelect.value === "all" ? "全部把位" : positions[0].label;
-  resultTitle.textContent = `${positionLabel} ${key.label}${modeLabel}`;
-  results.dataset.layout = matches.length === 1 ? "single" : "multi";
-
-  if (mode === "minor") {
-    minorNote.hidden = false;
-    minorNote.textContent = `小调使用关系大调图块显示：${key.label}小调对应 ${key.sourceMajorLabel}大调。`;
-  } else {
-    minorNote.hidden = true;
-    minorNote.textContent = "";
-  }
-
-  results.replaceChildren(...matches.map(createCard));
-  saveState();
-}
-
-function createCard(match) {
+function makeCard(key, keyIndex, mode, maxSemitone, scaleLength) {
+  const scale = buildScale(key, mode);
   const card = document.createElement("article");
-  card.className = "diagram-card";
+  card.className = "diagram-card formula-card";
+
+  const header = document.createElement("div");
+  header.className = "formula-card-head";
+
+  const title = document.createElement("h3");
+  title.textContent = `${key.label} ${mode.label}`;
+
+  const scaleLine = document.createElement("p");
+  scaleLine.textContent = scale.map((note) => note.label).join(" ");
 
   const media = document.createElement("div");
-  media.className = "diagram-media";
-
-  const pill = document.createElement("div");
-  pill.className = "diagram-pill";
-  pill.textContent = match.keyTitle;
-
-  const positionMark = document.createElement("div");
-  positionMark.className = "position-mark";
-  positionMark.textContent = match.positionLabel;
-
-  const image = document.createElement("div");
-  image.className = "diagram-image";
-  image.innerHTML = match.svg;
-  image.setAttribute("role", "img");
-  image.setAttribute("aria-label", match.alt);
-  image.tabIndex = 0;
-  image.title = "点击放大";
-  image.addEventListener("click", () => openLightbox(match));
-  image.addEventListener("keydown", (event) => {
+  media.className = "fingerboard-media";
+  media.innerHTML = makeFingerboardSvg(key, keyIndex, mode, maxSemitone, scaleLength);
+  media.tabIndex = 0;
+  media.setAttribute("role", "img");
+  media.setAttribute("aria-label", `${key.label}${mode.label}小提琴指板公式图`);
+  media.title = "点击放大";
+  media.addEventListener("click", () => openLightbox(key, keyIndex, mode, maxSemitone, scaleLength));
+  media.addEventListener("keydown", (event) => {
     if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
-      openLightbox(match);
+      openLightbox(key, keyIndex, mode, maxSemitone, scaleLength);
     }
   });
 
-  const caption = document.createElement("div");
-  caption.className = "diagram-caption";
-
-  const title = document.createElement("h3");
-  title.textContent = match.positionLabel;
-
   const meta = document.createElement("p");
-  meta.textContent = `${match.sourceLabel}${match.pairLabel ? ` / ${match.pairLabel}` : ""}`;
+  meta.className = "formula-meta";
+  const maxDistance = fingerDistanceMm(maxSemitone, scaleLength);
+  meta.textContent = `n=0-${maxSemitone}，L0=${scaleLength}mm，最大按弦距离=${maxDistance.toFixed(1)}mm`;
 
-  media.append(pill, positionMark, image);
-  caption.append(title, meta);
-  card.append(media, caption);
+  header.append(title, scaleLine);
+  card.append(header, media, meta);
   return card;
 }
 
@@ -339,16 +403,31 @@ lightbox.addEventListener("click", (event) => {
   }
 });
 
-function openLightbox(match) {
+function openLightbox(key, keyIndex, mode, maxSemitone, scaleLength) {
   const media = lightbox.querySelector(".lightbox-media");
-  media.innerHTML = match.svg;
-  media.setAttribute("aria-label", match.alt);
-  lightbox.querySelector("figcaption").textContent = `${match.keyTitle} · ${match.positionLabel}`;
+  media.innerHTML = makeFingerboardSvg(key, keyIndex, mode, maxSemitone, scaleLength);
+  lightbox.querySelector("figcaption").textContent = `${key.label} ${mode.label}`;
   lightbox.showModal();
 }
 
+function render() {
+  const modeId = getModeId();
+  const mode = getMode();
+  const keys = selectedKeys(modeId);
+  const maxSemitone = getMaxSemitone();
+  const scaleLength = getScaleLength();
+
+  resultTitle.textContent = tonicSelect.value === "all"
+    ? `全部调 ${mode.label}`
+    : `${keys[0]?.label || ""} ${mode.label}`;
+  formulaNote.textContent = `音阶 = T + ${mode.formula}；指位 = L0 × (1 - 2^(-n/12))。`;
+  results.dataset.layout = keys.length === 1 ? "single" : "multi";
+  results.replaceChildren(...keys.map((key, index) => makeCard(key, index, mode, maxSemitone, scaleLength)));
+  saveState();
+}
+
 function handleModeChange() {
-  fillTonicOptions(getMode(), tonicSelect.value);
+  fillTonicOptions(getModeId(), tonicSelect.value);
   render();
 }
 
@@ -358,8 +437,10 @@ for (const modeInput of filters.querySelectorAll('input[name="mode"]')) {
 
 tonicSelect.addEventListener("input", render);
 tonicSelect.addEventListener("change", render);
-positionSelect.addEventListener("input", render);
-positionSelect.addEventListener("change", render);
+rangeSelect.addEventListener("input", render);
+rangeSelect.addEventListener("change", render);
+scaleLengthInput.addEventListener("input", render);
+scaleLengthInput.addEventListener("change", render);
 
 filters.addEventListener("submit", (event) => {
   event.preventDefault();
@@ -367,18 +448,23 @@ filters.addEventListener("submit", (event) => {
 });
 
 resetButton.addEventListener("click", () => {
-  filters.elements.mode.value = DEFAULTS.mode;
-  positionSelect.value = DEFAULTS.position;
-  fillTonicOptions(DEFAULTS.mode, DEFAULTS.majorTonic);
+  filters.elements.mode.value = "major";
+  rangeSelect.value = String(MAX_SEMITONE_DEFAULT);
+  scaleLengthInput.value = String(SCALE_LENGTH_DEFAULT);
+  fillTonicOptions("major", "all");
   render();
 });
 
 const saved = loadSavedState();
 if (saved) {
   filters.elements.mode.value = saved.mode;
-  positionSelect.value = saved.position;
+  rangeSelect.value = saved.range;
+  scaleLengthInput.value = saved.scaleLength;
   fillTonicOptions(saved.mode, saved.tonic);
 } else {
-  fillTonicOptions(DEFAULTS.mode, DEFAULTS.majorTonic);
+  rangeSelect.value = String(MAX_SEMITONE_DEFAULT);
+  scaleLengthInput.value = String(SCALE_LENGTH_DEFAULT);
+  fillTonicOptions("major", "all");
 }
+
 render();

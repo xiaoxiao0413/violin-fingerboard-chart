@@ -3,22 +3,22 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>小提琴把位调性指位筛选</title>
-    <link rel="stylesheet" href="styles.css?v=20260610-svg-redraw">
-    <script src="app.js?v=20260610-svg-redraw" defer></script>
+    <title>小提琴公式指板图</title>
+    <link rel="stylesheet" href="styles.css?v=20260614-formula">
+    <script src="app.js?v=20260614-formula" defer></script>
   </head>
   <body>
     <main class="app-shell">
       <section class="control-panel" aria-labelledby="app-title">
         <div class="brand-block">
-          <p class="eyebrow">Violin Position Map</p>
-          <h1 id="app-title">小提琴把位调性指位筛选</h1>
+          <p class="eyebrow">Violin Formula Map</p>
+          <h1 id="app-title">小提琴公式指板图</h1>
         </div>
 
         <form class="filters" id="filters">
           <fieldset class="field-group">
             <legend>调式</legend>
-            <div class="segmented" role="radiogroup" aria-label="调式">
+            <div class="segmented mode-segmented" role="radiogroup" aria-label="调式">
               <label>
                 <input type="radio" name="mode" value="major" checked>
                 <span>大调</span>
@@ -36,17 +36,17 @@
           </label>
 
           <label class="field">
-            <span>把位</span>
-            <select id="position" name="position">
-              <option value="1">一把位</option>
-              <option value="2">二把位</option>
-              <option value="3">三把位</option>
-              <option value="4">四把位</option>
-              <option value="5">五把位</option>
-              <option value="6">六把位</option>
-              <option value="7">七把位</option>
-              <option value="all">全部把位</option>
+            <span>半音范围</span>
+            <select id="range" name="range">
+              <option value="12">0-12 半音</option>
+              <option value="17">0-17 半音</option>
+              <option value="24">0-24 半音</option>
             </select>
+          </label>
+
+          <label class="field">
+            <span>有效弦长 L0</span>
+            <input id="scale-length" name="scale-length" type="number" min="280" max="360" step="1" value="325" inputmode="numeric">
           </label>
 
           <button class="reset-button" type="button" id="reset">重置</button>
@@ -56,12 +56,12 @@
       <section class="result-panel" aria-live="polite">
         <div class="result-head">
           <div>
-            <p class="eyebrow">Matched Diagrams</p>
-            <h2 id="result-title">一把位 C大调</h2>
+            <p class="eyebrow">Formula Diagrams</p>
+            <h2 id="result-title">全部调 大调</h2>
           </div>
         </div>
 
-        <div id="minor-note" class="minor-note" hidden></div>
+        <div id="formula-note" class="formula-note"></div>
         <div id="results" class="diagram-grid"></div>
       </section>
     </main>

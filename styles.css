@@ -4,7 +4,7 @@
   --muted: #657282;
   --line: #d9e0e7;
   --panel: #ffffff;
-  --paper-line: rgba(255, 255, 255, 0.78);
+  --paper-line: rgba(29, 78, 116, 0.08);
   --teal: #0b7887;
   --teal-dark: #075761;
   --rose: #b6295e;
@@ -26,7 +26,7 @@ body {
   background:
     linear-gradient(var(--paper-line) 1px, transparent 1px),
     linear-gradient(90deg, var(--paper-line) 1px, transparent 1px),
-    linear-gradient(180deg, #fff7e9, #f6ddbd);
+    linear-gradient(135deg, #f7fbff 0%, #eef6f4 46%, #fff6ed 100%);
   background-size: 28px 28px, 28px 28px, auto;
   font-family:
     "Microsoft YaHei",
@@ -53,10 +53,10 @@ input {
 
 .control-panel,
 .result-panel {
-  background: rgba(255, 252, 244, 0.94);
+  background: rgba(255, 255, 255, 0.94);
   border: 2px solid rgba(255, 255, 255, 0.9);
   border-radius: 8px;
-  box-shadow: var(--shadow);
+  box-shadow: 0 18px 46px rgba(33, 59, 88, 0.12);
 }
 
 .control-panel {
@@ -129,6 +129,10 @@ legend,
   background: #fff9ef;
 }
 
+.mode-segmented {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
 .segmented label {
   position: relative;
   display: grid;
@@ -165,7 +169,8 @@ legend,
   display: block;
 }
 
-select {
+select,
+input[type="number"] {
   width: 100%;
   min-height: 44px;
   padding: 0 38px 0 12px;
@@ -175,7 +180,12 @@ select {
   background: #ffffff;
 }
 
-select:focus {
+input[type="number"] {
+  padding-right: 12px;
+}
+
+select:focus,
+input[type="number"]:focus {
   outline: 3px solid rgba(11, 120, 135, 0.2);
   border-color: var(--teal);
 }
@@ -217,23 +227,24 @@ h2 {
   line-height: 1.12;
 }
 
-.minor-note {
+.formula-note {
   padding: 10px 12px;
-  color: #6f3e00;
-  border-left: 4px solid var(--amber);
+  color: #274053;
+  border-left: 4px solid var(--teal);
   border-radius: 6px;
-  background: #fff7e4;
+  background: #edf8fb;
+  font-weight: 700;
 }
 
 .diagram-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 22px;
   align-items: start;
 }
 
 .diagram-grid[data-layout="single"] {
-  grid-template-columns: minmax(260px, 420px);
+  grid-template-columns: minmax(280px, 460px);
   justify-content: center;
 }
 
@@ -241,9 +252,73 @@ h2 {
   min-width: 0;
   overflow: hidden;
   border-radius: 8px;
-  background: #fffdf7;
-  box-shadow: 0 12px 32px rgba(95, 64, 30, 0.14);
+  background: #ffffff;
+  box-shadow: 0 12px 32px rgba(42, 71, 100, 0.13);
   animation: card-in 0.28s ease both;
+}
+
+.formula-card {
+  display: grid;
+  grid-template-rows: auto auto auto;
+}
+
+.formula-card-head {
+  display: grid;
+  gap: 6px;
+  padding: 14px 16px 12px;
+  border-bottom: 1px solid rgba(217, 224, 231, 0.9);
+}
+
+.formula-card-head h3 {
+  margin: 0;
+  padding: 0;
+  color: var(--ink);
+  font-size: 19px;
+  line-height: 1.25;
+  border-radius: 0;
+  background: none;
+}
+
+.formula-card-head p,
+.formula-meta {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.fingerboard-media {
+  display: flex;
+  justify-content: center;
+  min-width: 0;
+  padding: 12px;
+  overflow: hidden;
+  background:
+    linear-gradient(rgba(11, 120, 135, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(11, 120, 135, 0.08) 1px, transparent 1px),
+    #f8fbfd;
+  background-size: 18px 18px, 18px 18px, auto;
+  cursor: zoom-in;
+}
+
+.fingerboard-svg {
+  display: block;
+  width: min(100%, 420px);
+  height: auto;
+  border-radius: 8px;
+}
+
+.fingerboard-media:hover .fingerboard-svg,
+.fingerboard-media:focus-visible .fingerboard-svg {
+  outline: 3px solid rgba(11, 120, 135, 0.34);
+  outline-offset: 2px;
+}
+
+.formula-meta {
+  padding: 10px 16px 14px;
+  border-top: 1px solid rgba(217, 224, 231, 0.72);
+  background: #fbfdff;
 }
 
 @keyframes card-in {
@@ -344,7 +419,7 @@ h2 {
 }
 
 .lightbox {
-  max-width: min(92vw, 820px);
+  max-width: min(94vw, 620px);
   padding: 16px;
   border: 0;
   border-radius: 10px;
@@ -363,14 +438,14 @@ h2 {
 
 .lightbox-media {
   margin: 0 auto;
-  width: min(80vw, 420px);
+  width: min(84vw, 480px);
 }
 
 .lightbox-media svg {
   display: block;
   width: 100%;
   height: auto;
-  max-height: 76vh;
+  max-height: 78vh;
   border-radius: 10px;
 }
 
@@ -459,6 +534,10 @@ h3 {
   .diagram-grid {
     grid-template-columns: 1fr;
     gap: 16px;
+  }
+
+  .diagram-grid[data-layout="single"] {
+    grid-template-columns: 1fr;
   }
 
   .diagram-media {
