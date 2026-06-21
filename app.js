@@ -342,8 +342,9 @@ function loadSavedState() {
     return {
       lang: I18N[saved.lang] ? saved.lang : "zh-Hans",
       mode: modeId,
-      tonic: typeof saved.tonic === "string" ? saved.tonic : "all",
-      position: typeof saved.position === "string" ? saved.position : "all",
+      // 主音/把位不持久化，每次打开页面都固定为「全部调 · 全部把位」
+      tonic: "all",
+      position: "all",
     };
   } catch {
     return null;
@@ -355,8 +356,6 @@ function saveState() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify({
       lang: getLang(),
       mode: getModeId(),
-      tonic: tonicSelect.value,
-      position: positionSelect.value,
     }));
   } catch {
     /* Ignore unavailable localStorage. */
