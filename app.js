@@ -1,7 +1,7 @@
 const SCALE_LENGTH_DEFAULT = 325;
 const FINGERBOARD_LENGTH_DEFAULT = 270;
 const MAX_SEMITONE = 24;
-const STORAGE_KEY = "violin-formula-fingerboard-v2";
+const STORAGE_KEY = "violin-formula-fingerboard-v3";
 
 const LETTERS = ["C", "D", "E", "F", "G", "A", "B"];
 const LETTER_PC = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 };

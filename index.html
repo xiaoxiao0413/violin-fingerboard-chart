@@ -1,16 +1,15 @@
 <!doctype html>
-<html lang="zh-CN" data-default-lang="zh-Hans">
+<html lang="en" data-default-lang="en">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>小提琴指板图 · 五度圈 · 把位查询</title>
-    <meta name="description" content="互动小提琴指板图：按调式、主音、把位查看音阶指法，配五度圈，支持简体中文/繁體中文/English。">
+    <title>Violin Fingerboard Chart · Position Map · Circle of Fifths</title>
+    <meta name="description" content="Interactive violin fingerboard chart for scales, keys, and positions. Find finger patterns by key, mode, and position, with a circle of fifths reference.">
     <link rel="canonical" href="https://xiaoxiao0413.github.io/violin-position-map/">
-    <link rel="alternate" hreflang="zh-Hans" href="https://xiaoxiao0413.github.io/violin-position-map/">
-    <link rel="alternate" hreflang="en" href="https://xiaoxiao0413.github.io/violin-position-map/en/">
+    <link rel="alternate" hreflang="en" href="https://xiaoxiao0413.github.io/violin-position-map/">
     <link rel="alternate" hreflang="x-default" href="https://xiaoxiao0413.github.io/violin-position-map/">
-    <meta property="og:title" content="小提琴指板图 · 五度圈 · 把位查询">
-    <meta property="og:description" content="互动小提琴指板图：按调式、主音、把位查看音阶指法，配五度圈。">
+    <meta property="og:title" content="Violin Fingerboard Chart · Position Map · Circle of Fifths">
+    <meta property="og:description" content="Interactive violin fingerboard chart for scales, keys, and positions, with a circle of fifths reference.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://xiaoxiao0413.github.io/violin-position-map/">
     <link rel="stylesheet" href="styles.css?v=20260621-v5">
@@ -23,19 +22,19 @@
         <select id="language" name="language">
           <option value="zh-Hans">简</option>
           <option value="zh-Hant">繁</option>
-          <option value="en">EN</option>
+          <option value="en" selected>EN</option>
         </select>
       </label>
 
       <section class="control-panel" aria-labelledby="app-title">
         <div class="brand-block">
-          <p class="eyebrow" data-i18n="brandEyebrow">小提琴指板图</p>
-          <h1 id="app-title" data-i18n="appTitle">小提琴指板图</h1>
+          <p class="eyebrow" data-i18n="brandEyebrow">Violin Fingerboard Chart</p>
+          <h1 id="app-title" data-i18n="appTitle">Violin Fingerboard Chart</h1>
         </div>
 
         <section class="fifths-wheel" aria-labelledby="fifths-title">
-          <h2 id="fifths-title" data-i18n="circleTitle">五度圈</h2>
-          <svg class="fifths-svg" viewBox="0 0 250 250" role="img" aria-label="五度圈">
+          <h2 id="fifths-title" data-i18n="circleTitle">Circle of Fifths for Violin</h2>
+          <svg class="fifths-svg" viewBox="0 0 250 250" role="img" aria-label="Circle of Fifths">
             <circle class="fifths-ring" cx="125" cy="125" r="92" />
             <circle class="fifths-inner-ring" cx="125" cy="125" r="56" />
             <g class="fifths-major">
@@ -66,34 +65,34 @@
               <text x="63" y="89">g</text>
               <text x="89" y="63">d</text>
             </g>
-            <text class="fifths-center" x="125" y="121" data-i18n="circleCenter">五度圈</text>
-            <text class="fifths-center-sub" x="125" y="138" data-i18n="circleSub">大小调</text>
+            <text class="fifths-center" x="125" y="121" data-i18n="circleCenter">Fifths</text>
+            <text class="fifths-center-sub" x="125" y="138" data-i18n="circleSub">Major / minor</text>
           </svg>
         </section>
 
         <form class="filters" id="filters">
 
           <fieldset class="field-group">
-            <legend data-i18n="modeLabel">调式</legend>
-            <div class="segmented mode-segmented" role="radiogroup" aria-label="调式">
+            <legend data-i18n="modeLabel">Mode</legend>
+            <div class="segmented mode-segmented" role="radiogroup" aria-label="Mode">
               <label>
                 <input type="radio" name="mode" value="major" checked>
-                <span data-i18n="majorMode">大调</span>
+                <span data-i18n="majorMode">Major</span>
               </label>
               <label>
                 <input type="radio" name="mode" value="minor">
-                <span data-i18n="minorMode">小调</span>
+                <span data-i18n="minorMode">Minor</span>
               </label>
             </div>
           </fieldset>
 
           <label class="field">
-            <span data-i18n="tonicLabel">主音</span>
+            <span data-i18n="tonicLabel">Tonic</span>
             <select id="tonic" name="tonic"></select>
           </label>
 
           <label class="field">
-            <span data-i18n="positionLabel">把位</span>
+            <span data-i18n="positionLabel">Position</span>
             <select id="position" name="position"></select>
           </label>
 
@@ -104,8 +103,8 @@
       <section class="result-panel" aria-live="polite">
         <div class="result-head">
           <div>
-            <p class="eyebrow" data-i18n="chartsEyebrow">指板图</p>
-            <h2 id="result-title">全部调 · 大调</h2>
+            <p class="eyebrow" data-i18n="chartsEyebrow">Results</p>
+            <h2 id="result-title">All Keys · Major</h2>
           </div>
         </div>
 
