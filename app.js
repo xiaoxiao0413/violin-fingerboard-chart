@@ -198,6 +198,10 @@ const POSITIONS = CN_NUM.map((names, index) => {
   return { id: String(p), order: p, ...names, startNote: p + 1, endNote: p + 4 };
 });
 
+const DEFAULT_LANG = I18N[document.documentElement.dataset.defaultLang]
+  ? document.documentElement.dataset.defaultLang
+  : "zh-Hans";
+
 const filters = document.querySelector("#filters");
 const languageSelect = document.querySelector("#language");
 const tonicSelect = document.querySelector("#tonic");
@@ -208,7 +212,7 @@ const resetButton = document.querySelector("#reset");
 const lightbox = document.createElement("dialog");
 
 function getLang() {
-  return I18N[languageSelect?.value] ? languageSelect.value : "zh-Hans";
+  return I18N[languageSelect?.value] ? languageSelect.value : DEFAULT_LANG;
 }
 
 function t(key) {
@@ -340,7 +344,7 @@ function loadSavedState() {
       ? "minor"
       : MODES[saved.mode] ? saved.mode : "major";
     return {
-      lang: I18N[saved.lang] ? saved.lang : "zh-Hans",
+      lang: I18N[saved.lang] ? saved.lang : DEFAULT_LANG,
       mode: modeId,
       // 主音/把位不持久化，每次打开页面都固定为「全部调 · 全部把位」
       tonic: "all",
@@ -590,7 +594,7 @@ if (saved) {
   fillTonicOptions(saved.mode, saved.tonic);
   fillPositionOptions(saved.position);
 } else {
-  languageSelect.value = "zh-Hans";
+  languageSelect.value = DEFAULT_LANG;
   updateStaticText();
   fillTonicOptions("major", "all");
   fillPositionOptions("all");
