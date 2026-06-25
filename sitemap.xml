@@ -2,9 +2,9 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://xiaoxiao0413.github.io/violin-position-map/</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://xiaoxiao0413.github.io/violin-position-map/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://xiaoxiao0413.github.io/violin-position-map/"/>
+    <loc>https://xiaoxiao0413.github.io/violin-fingerboard-map/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://xiaoxiao0413.github.io/violin-fingerboard-map/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://xiaoxiao0413.github.io/violin-fingerboard-map/"/>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
