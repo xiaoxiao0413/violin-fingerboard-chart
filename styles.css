@@ -1037,3 +1037,106 @@ h3 {
   min-height: 90px;
   margin: 4px 0;
 }
+
+/* ─── Static Pages (privacy, 404) ────────────────────────────────── */
+.static-page {
+  display: flex;
+  justify-content: center;
+  width: min(1440px, calc(100% - 32px));
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 48px 0;
+}
+
+.static-card {
+  width: 100%;
+  max-width: 640px;
+  padding: 36px 40px;
+  background: var(--panel);
+  border: 1px solid rgba(201, 180, 142, 0.8);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  color: var(--ink);
+  line-height: 1.7;
+}
+
+.static-card h1 {
+  margin: 6px 0 4px;
+  color: var(--accent);
+}
+
+.static-card h2 {
+  margin-top: 26px;
+  margin-bottom: 6px;
+  font-size: 18px;
+  color: var(--teal-dark);
+}
+
+.static-card p {
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.static-card a {
+  color: var(--teal-dark);
+  text-decoration: underline;
+}
+
+.static-back {
+  display: inline-block;
+  margin-bottom: 18px;
+  color: var(--teal-dark);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.static-back:hover {
+  text-decoration: underline;
+}
+
+.static-updated {
+  margin-top: -4px;
+  font-size: 13px;
+  font-style: italic;
+}
+
+.static-card--center {
+  text-align: center;
+}
+
+.static-404-code {
+  margin: 0;
+  color: var(--accent);
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 72px;
+  font-weight: 900;
+}
+
+.static-home-link {
+  display: inline-block;
+  margin-top: 18px;
+  text-decoration: none;
+}
+
+.site-footer {
+  grid-column: 1 / -1;
+  padding: 6px 4px 0;
+  text-align: center;
+  font-size: 12px;
+}
+
+.site-footer a {
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.site-footer a:hover {
+  color: var(--teal-dark);
+  text-decoration: underline;
+}
+
+.static-card a.reset-button,
+.static-card a.static-home-link {
+  color: #ffffff;
+  text-decoration: none;
+}
