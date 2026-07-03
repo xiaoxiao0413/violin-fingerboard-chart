@@ -925,17 +925,30 @@ h3 {
 }
 
 @media (max-width: 760px) {
+  html,
+  body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
   .app-shell {
     grid-template-columns: 1fr;
-    width: min(100% - 20px, 560px);
+    width: 100%;
+    max-width: 100%;
     min-height: auto;
-    margin: 10px auto;
-    padding: 0 0 12px;
+    margin: 0;
+    padding: 10px;
+    overflow-x: hidden;
   }
 
   .control-panel,
   .result-panel {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
     padding: 18px;
+    overflow: hidden;
   }
 
   .control-panel {
@@ -956,12 +969,27 @@ h3 {
   }
 
   .diagram-grid {
+    width: 100%;
+    min-width: 0;
     grid-template-columns: 1fr;
     gap: 16px;
   }
 
   .diagram-grid[data-layout="single"] {
     grid-template-columns: 1fr;
+  }
+
+  .diagram-card,
+  .formula-card,
+  .fingerboard-media {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .fingerboard-svg {
+    width: 100%;
+    max-width: 100%;
   }
 
   .diagram-media {
