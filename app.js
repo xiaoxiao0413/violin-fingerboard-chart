@@ -11,7 +11,7 @@ const I18N = {
     htmlLang: "zh-CN",
     pageTitle: "小提琴指板图",
     brandEyebrow: "小提琴指板图",
-    appTitle: "小提琴指板图",
+    appTitle: "Violin Fingerboard",
     circleTitle: "五度圈",
     circleCenter: "五度圈",
     circleSub: "大小调",
@@ -44,7 +44,7 @@ const I18N = {
     htmlLang: "zh-Hant",
     pageTitle: "小提琴指板圖",
     brandEyebrow: "小提琴指板圖",
-    appTitle: "小提琴指板圖",
+    appTitle: "Violin Fingerboard",
     circleTitle: "五度圈",
     circleCenter: "五度圈",
     circleSub: "大小調",
@@ -77,7 +77,7 @@ const I18N = {
     htmlLang: "en",
     pageTitle: "Violin Fingerboard Chart",
     brandEyebrow: "Violin Fingerboard Chart",
-    appTitle: "Violin Fingerboard Chart",
+    appTitle: "Violin Fingerboard",
     circleTitle: "Circle of Fifths",
     circleCenter: "Fifths",
     circleSub: "Major / minor",
@@ -200,12 +200,9 @@ const POSITIONS = CN_NUM.map((names, index) => {
   return { id: String(p), order: p, ...names, startNote: p + 1, endNote: p + 4 };
 });
 
-const DEFAULT_LANG = I18N[document.documentElement.dataset.defaultLang]
-  ? document.documentElement.dataset.defaultLang
-  : "zh-Hans";
+const DEFAULT_LANG = "en";
 
 const filters = document.querySelector("#filters");
-const languageSelect = document.querySelector("#language");
 const tonicSelect = document.querySelector("#tonic");
 const positionSelect = document.querySelector("#position");
 const resultTitle = document.querySelector("#result-title");
@@ -214,7 +211,7 @@ const resetButton = document.querySelector("#reset");
 const lightbox = document.createElement("dialog");
 
 function getLang() {
-  return I18N[languageSelect?.value] ? languageSelect.value : DEFAULT_LANG;
+  return DEFAULT_LANG;
 }
 
 function t(key) {
@@ -336,7 +333,7 @@ function loadSavedState() {
       ? "minor"
       : MODES[saved.mode] ? saved.mode : "major";
     return {
-      lang: I18N[saved.lang] ? saved.lang : DEFAULT_LANG,
+      lang: DEFAULT_LANG,
       mode: modeId,
       // 主音/把位不持久化，每次打开页面都固定为默认值（大调 C · 第一把位）
       tonic: modeId === "minor" ? MODES.minor.keys[0].id : "c",
@@ -350,7 +347,7 @@ function loadSavedState() {
 function saveState() {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify({
-      lang: getLang(),
+      lang: DEFAULT_LANG,
       mode: getModeId(),
     }));
   } catch {
@@ -575,17 +572,10 @@ function handleModeChange() {
   render();
 }
 
-function handleLanguageChange() {
-  fillTonicOptions(getModeId(), tonicSelect.value);
-  fillPositionOptions(positionSelect.value);
-  render();
-}
-
 for (const modeInput of filters.querySelectorAll('input[name="mode"]')) {
   modeInput.addEventListener("change", handleModeChange);
 }
 
-languageSelect.addEventListener("change", handleLanguageChange);
 tonicSelect.addEventListener("input", render);
 tonicSelect.addEventListener("change", render);
 positionSelect.addEventListener("input", render);
@@ -605,13 +595,11 @@ resetButton.addEventListener("click", () => {
 
 const saved = loadSavedState();
 if (saved) {
-  languageSelect.value = saved.lang;
   filters.elements.mode.value = saved.mode;
   updateStaticText();
   fillTonicOptions(saved.mode, saved.tonic);
   fillPositionOptions(saved.position);
 } else {
-  languageSelect.value = DEFAULT_LANG;
   updateStaticText();
   fillTonicOptions("major", "c");
   fillPositionOptions("1");

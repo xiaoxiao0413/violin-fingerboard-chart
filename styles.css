@@ -48,9 +48,14 @@ body {
     linear-gradient(155deg, #f1e2c4 0%, #e7d4af 55%, #efe0c0 100%);
   background-size: auto, 140% 140%, 140% 140%, auto;
   background-position: 0 0, 0% 0%, 100% 0%, 0 0;
+  animation: drift-blobs 30s ease-in-out infinite alternate;
   font-family: var(--font-sans);
 }
 
+@keyframes drift-blobs {
+  0%   { background-position: 0 0, 0%  0%,  100% 0%, 0 0; }
+  100% { background-position: 0 0, 7% 12%,  90% 16%, 0 0; }
+}
 
 button,
 select,
@@ -64,70 +69,12 @@ select {
               box-shadow 0.18s ease, transform 0.18s ease;
 }
 
-/* ─── Language Switcher ──────────────────────────────────────── */
-.language-control {
-  position: fixed;
-  top: 16px;
-  right: 20px;
-  z-index: 20;
-  display: inline-flex;
-  gap: 6px;
-  align-items: center;
-  min-height: 36px;
-  padding: 0 6px 0 12px;
-  border: 1px solid rgba(176, 150, 104, 0.9);
-  border-radius: 999px;
-  background: var(--panel);
-  box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.7) inset,
-    var(--shadow-soft);
-  backdrop-filter: blur(10px);
-  transition: border-color 0.18s ease, box-shadow 0.18s ease;
-}
-
-.language-control:hover {
-  border-color: var(--teal);
-  box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.7) inset,
-    var(--shadow);
-}
-
-.language-icon {
-  color: var(--teal-dark);
-  font-size: 14px;
-  font-weight: 900;
-  line-height: 1;
-}
-
-.language-control select {
-  width: 54px;
-  min-height: 28px;
-  padding: 0 18px 0 6px;
-  color: var(--ink);
-  border: 0;
-  border-radius: 999px;
-  background-color: transparent;
-  font-family: var(--font-sans);
-  font-size: 13px;
-  font-weight: 800;
-  letter-spacing: 0.02em;
-  text-overflow: clip;
-  cursor: pointer;
-}
-
-.language-control select:focus-visible {
-  outline: 2px solid rgba(46, 125, 119, 0.4);
-  outline-offset: 2px;
-}
-
 /* ─── Layout Shell ───────────────────────────────────────────── */
 .app-shell {
   display: grid;
-  grid-template-columns: minmax(290px, 340px) minmax(620px, 820px);
-  align-items: stretch;
-  justify-content: center;
-  gap: 22px;
-  width: min(1200px, calc(100% - 32px));
+  grid-template-columns: minmax(270px, 350px) minmax(0, 1fr);
+  gap: 20px;
+  width: min(1440px, calc(100% - 32px));
   min-height: 100vh;
   margin: 0 auto;
   padding: 18px 0;
@@ -144,15 +91,33 @@ select {
   backdrop-filter: blur(8px);
 }
 
+.seo-notes {
+  grid-column: 1 / -1;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 18px 22px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.7;
+  background: rgba(255, 250, 233, 0.78);
+  border: 1px solid rgba(201, 180, 142, 0.65);
+  border-radius: 8px;
+}
+
+.seo-notes h2 {
+  margin-bottom: 8px;
+  color: var(--ink);
+  font-size: 16px;
+}
+
 /* ─── Control Panel ──────────────────────────────────────────── */
 .control-panel {
   position: sticky;
-  top: 18px;
-  align-self: stretch;
+  top: 16px;
+  align-self: start;
   display: flex;
   flex-direction: column;
   gap: 16px;
-  min-height: calc(100vh - 36px);
   padding: 22px;
 }
 
@@ -183,7 +148,6 @@ select {
   content: "♫";
   animation: note-float 4s ease-in-out infinite 1.2s;
 }
-
 
 @keyframes note-float {
   0%, 100% { transform: translateY(0) rotate(0deg); }
@@ -222,7 +186,6 @@ h1 {
   -webkit-text-fill-color: transparent;
   animation: title-shine 9s ease-in-out infinite alternate;
 }
-
 
 @keyframes title-shine {
   0%   { background-position: 0% 50%; }
@@ -491,7 +454,6 @@ input[type="number"]:focus {
   flex-direction: column;
   gap: 18px;
   min-width: 0;
-  min-height: calc(100vh - 36px);
   padding: 22px;
 }
 
@@ -534,13 +496,11 @@ input[type="number"]:focus {
   grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
   gap: 18px;
   align-items: start;
-  flex: 1;
 }
 
 .diagram-grid[data-layout="single"] {
-  grid-template-columns: minmax(560px, 760px);
+  grid-template-columns: minmax(290px, 500px);
   justify-content: center;
-  align-content: center;
 }
 
 /* 单图布局：去掉多余的卡片包装，避免与结果面板形成「框中框」 */
@@ -567,8 +527,6 @@ input[type="number"]:focus {
 }
 
 .diagram-grid[data-layout="single"] .fingerboard-media {
-  align-items: center;
-  min-height: min(62vh, 620px);
   padding-left: 0;
   padding-right: 0;
 }
@@ -712,9 +670,10 @@ input[type="number"]:focus {
 
 .fingerboard-svg {
   display: block;
-  width: min(100%, 700px);
+  width: auto;
   height: auto;
-  max-height: calc(100vh - 190px);
+  max-width: min(100%, 430px);
+  max-height: 72vh;
   border-radius: 8px;
   filter: drop-shadow(0 8px 18px rgba(20, 10, 4, 0.12));
 }
@@ -761,6 +720,88 @@ input[type="number"]:focus {
     animation: none !important;
     transition: none !important;
   }
+}
+
+/* ─── Diagram Media (image-based cards, legacy) ──────────────── */
+.diagram-media {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 380px;
+  padding: 70px 28px 28px;
+  overflow: hidden;
+  background:
+    linear-gradient(rgba(110, 78, 32, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(110, 78, 32, 0.06) 1px, transparent 1px),
+    linear-gradient(180deg, #fdf8ec, #f5ecda);
+  background-size: 22px 22px, 22px 22px, auto;
+}
+
+.diagram-pill {
+  position: absolute;
+  top: 18px;
+  left: 50%;
+  z-index: 2;
+  max-width: calc(100% - 34px);
+  padding: 8px 14px 10px;
+  color: #ffffff;
+  font-family: var(--font-sans);
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  border-radius: 8px;
+  background: var(--teal-dark);
+  box-shadow: 0 8px 16px rgba(30, 86, 82, 0.24);
+  transform: translateX(-50%);
+}
+
+.position-mark {
+  position: absolute;
+  top: 78px;
+  right: 24px;
+  z-index: 2;
+  color: var(--ink);
+  font-weight: 900;
+}
+
+.diagram-image {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: min(82%, 260px);
+  border-radius: 8px;
+  box-shadow: 0 10px 22px rgba(20, 10, 4, 0.15);
+  cursor: zoom-in;
+  transition: transform 0.18s ease;
+}
+
+.diagram-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.diagram-image:hover,
+.diagram-image:focus-visible {
+  transform: scale(1.02);
+}
+
+.diagram-image:focus-visible {
+  outline: 3px solid rgba(46, 125, 119, 0.42);
+  outline-offset: 2px;
+}
+
+.diagram-missing {
+  display: grid;
+  place-items: center;
+  width: min(78%, 250px);
+  min-height: 220px;
+  color: var(--muted);
+  border: 2px dashed var(--line);
+  border-radius: 8px;
+  background: rgba(255, 250, 233, 0.6);
 }
 
 /* ─── Lightbox ───────────────────────────────────────────────── */
@@ -845,6 +886,18 @@ input[type="number"]:focus {
   transform: scale(1.06) rotate(90deg);
 }
 
+/* ─── Diagram Caption (legacy image cards) ───────────────────── */
+.diagram-caption {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 8px 12px;
+  align-items: center;
+  min-height: 74px;
+  padding: 12px 14px 14px;
+  border-top: 1px solid rgba(201, 180, 142, 0.75);
+  background: rgba(255, 250, 233, 0.7);
+}
+
 h3 {
   margin-bottom: 0;
   padding: 6px 10px;
@@ -857,38 +910,45 @@ h3 {
   background: var(--teal-soft);
 }
 
-/* ─── Responsive ─────────────────────────────────────────────── */
-@media (max-width: 1100px) {
-  .app-shell {
-    grid-template-columns: minmax(260px, 330px) minmax(0, 1fr);
-    width: min(100% - 32px, 1120px);
-  }
+.diagram-caption p {
+  margin-bottom: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.35;
+}
 
+/* ─── Responsive ─────────────────────────────────────────────── */
+@media (max-width: 960px) {
   .control-panel {
     position: static;
   }
 }
 
 @media (max-width: 760px) {
-  .language-control {
-    position: static;
-    justify-content: flex-end;
-    width: min(100% - 20px, 560px);
-    margin: 10px auto 0;
+  html,
+  body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
   }
 
   .app-shell {
     grid-template-columns: 1fr;
-    width: min(100% - 20px, 560px);
+    width: 100%;
+    max-width: 100%;
     min-height: auto;
-    margin: 10px auto;
-    padding: 0 0 12px;
+    margin: 0;
+    padding: 10px;
+    overflow-x: hidden;
   }
 
   .control-panel,
   .result-panel {
-    min-height: auto;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
     padding: 18px;
+    overflow: hidden;
   }
 
   .control-panel {
@@ -909,6 +969,8 @@ h3 {
   }
 
   .diagram-grid {
+    width: 100%;
+    min-width: 0;
     grid-template-columns: 1fr;
     gap: 16px;
   }
@@ -917,8 +979,25 @@ h3 {
     grid-template-columns: 1fr;
   }
 
-  .diagram-grid[data-layout="single"] .fingerboard-media {
+  .diagram-card,
+  .formula-card,
+  .fingerboard-media {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .fingerboard-svg {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .diagram-media {
     min-height: 340px;
+  }
+
+  .diagram-pill {
+    font-size: 20px;
   }
 }
 
