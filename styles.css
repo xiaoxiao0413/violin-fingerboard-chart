@@ -69,62 +69,6 @@ select {
               box-shadow 0.18s ease, transform 0.18s ease;
 }
 
-/* ─── Language Switcher ──────────────────────────────────────── */
-.language-control {
-  position: fixed;
-  top: 16px;
-  right: 20px;
-  z-index: 20;
-  display: inline-flex;
-  gap: 6px;
-  align-items: center;
-  min-height: 36px;
-  padding: 0 6px 0 12px;
-  border: 1px solid rgba(176, 150, 104, 0.9);
-  border-radius: 999px;
-  background: var(--panel);
-  box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.7) inset,
-    var(--shadow-soft);
-  backdrop-filter: blur(10px);
-  transition: border-color 0.18s ease, box-shadow 0.18s ease;
-}
-
-.language-control:hover {
-  border-color: var(--teal);
-  box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.7) inset,
-    var(--shadow);
-}
-
-.language-icon {
-  color: var(--teal-dark);
-  font-size: 14px;
-  font-weight: 900;
-  line-height: 1;
-}
-
-.language-control select {
-  width: 54px;
-  min-height: 28px;
-  padding: 0 18px 0 6px;
-  color: var(--ink);
-  border: 0;
-  border-radius: 999px;
-  background-color: transparent;
-  font-family: var(--font-sans);
-  font-size: 13px;
-  font-weight: 800;
-  letter-spacing: 0.02em;
-  text-overflow: clip;
-  cursor: pointer;
-}
-
-.language-control select:focus-visible {
-  outline: 2px solid rgba(46, 125, 119, 0.4);
-  outline-offset: 2px;
-}
-
 /* ─── Layout Shell ───────────────────────────────────────────── */
 .app-shell {
   display: grid;
@@ -981,13 +925,6 @@ h3 {
 }
 
 @media (max-width: 760px) {
-  .language-control {
-    position: static;
-    justify-content: flex-end;
-    width: min(100% - 20px, 560px);
-    margin: 10px auto 0;
-  }
-
   .app-shell {
     grid-template-columns: 1fr;
     width: min(100% - 20px, 560px);
