@@ -983,32 +983,6 @@ h3 {
 
 }
 
-/* ─── Learning Guide / SEO Content ───────────────────────────── */
-.learning-guide {
-  grid-column: 1 / -1;
-  min-width: 0;
-  margin-top: -4px;
-}
-
-.learning-guide p {
-  margin: 0;
-  max-width: none;
-  color: var(--muted);
-  font-size: 13px;
-  line-height: 1.45;
-}
-
-.learning-guide strong {
-  color: var(--teal-dark);
-  font-weight: 900;
-}
-
-@media (max-width: 760px) {
-  .learning-guide p {
-    font-size: 12px;
-  }
-}
-
 /* ─── Reserved Ad Slots ──────────────────────────────────────────
    Hidden placeholders for future ad placements. To go live:
    remove the "ad-slot--reserved" class from the markup and insert
