@@ -91,25 +91,6 @@ select {
   backdrop-filter: blur(8px);
 }
 
-.seo-notes {
-  grid-column: 1 / -1;
-  max-width: 760px;
-  margin: 0 auto;
-  padding: 18px 22px;
-  color: var(--muted);
-  font-size: 14px;
-  line-height: 1.7;
-  background: rgba(255, 250, 233, 0.78);
-  border: 1px solid rgba(201, 180, 142, 0.65);
-  border-radius: 8px;
-}
-
-.seo-notes h2 {
-  margin-bottom: 8px;
-  color: var(--ink);
-  font-size: 16px;
-}
-
 /* ─── Control Panel ──────────────────────────────────────────── */
 .control-panel {
   position: sticky;
@@ -998,6 +979,102 @@ h3 {
 
   .diagram-pill {
     font-size: 20px;
+  }
+
+}
+
+/* ─── Learning Guide / SEO Content ───────────────────────────── */
+.learning-guide {
+  grid-column: 1 / -1;
+  display: grid;
+  gap: 24px;
+  min-width: 0;
+  padding: 28px 32px;
+  border: 1px solid rgba(201, 180, 142, 0.72);
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, rgba(255, 250, 233, 0.92), rgba(245, 236, 213, 0.82)),
+    var(--panel);
+  color: var(--ink);
+}
+
+.guide-intro {
+  display: grid;
+  gap: 10px;
+  max-width: 860px;
+}
+
+.learning-guide h2,
+.learning-guide h3,
+.learning-guide p {
+  margin: 0;
+}
+
+.learning-guide h2 {
+  color: var(--teal-dark);
+  font-family: var(--font-serif);
+  font-size: 26px;
+  line-height: 1.18;
+}
+
+.learning-guide h3 {
+  padding: 0;
+  color: var(--accent);
+  background: none;
+  border-radius: 0;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 900;
+  line-height: 1.28;
+}
+
+.learning-guide p {
+  max-width: 74ch;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.68;
+}
+
+.guide-grid,
+.faq-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px 28px;
+}
+
+.guide-grid section,
+.faq-list section {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+  padding-top: 14px;
+  border-top: 1px solid rgba(201, 180, 142, 0.68);
+}
+
+.guide-faq {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+}
+
+@media (max-width: 760px) {
+  .learning-guide {
+    padding: 20px 18px;
+  }
+
+  .learning-guide h2 {
+    font-size: 22px;
+  }
+
+  .learning-guide p {
+    font-size: 14px;
+    line-height: 1.62;
+  }
+
+  .guide-grid,
+  .faq-list {
+    grid-template-columns: 1fr;
+    gap: 16px;
   }
 }
 
