@@ -987,18 +987,12 @@ h3 {
 .learning-guide {
   grid-column: 1 / -1;
   min-width: 0;
-  padding: 10px 14px;
-  border: 1px solid rgba(201, 180, 142, 0.72);
-  border-radius: 8px;
-  background:
-    linear-gradient(180deg, rgba(255, 250, 233, 0.92), rgba(245, 236, 213, 0.82)),
-    var(--panel);
-  color: var(--ink);
+  margin-top: -4px;
 }
 
 .learning-guide p {
   margin: 0;
-  max-width: 70ch;
+  max-width: none;
   color: var(--muted);
   font-size: 13px;
   line-height: 1.45;
@@ -1010,10 +1004,6 @@ h3 {
 }
 
 @media (max-width: 760px) {
-  .learning-guide {
-    padding: 9px 12px;
-  }
-
   .learning-guide p {
     font-size: 12px;
   }
