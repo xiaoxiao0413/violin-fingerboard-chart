@@ -78,7 +78,7 @@ const I18N = {
     pageTitle: "violin-fingerboard-chart",
     brandEyebrow: "violin-fingerboard-chart",
     appTitle: "violin-fingerboard-chart",
-    circleTitle: "Circle of Fifths",
+    circleTitle: "Circle of Fifths for Violin",
     circleCenter: "Fifths",
     circleSub: "Major / minor",
     languageLabel: "Language",
@@ -416,7 +416,7 @@ function makeFingerboardSvg(key, keyIndex, mode, maxSemitone, scaleLength) {
   const yFor = (semitone) => top + (fingerDistanceMm(semitone, scaleLength) / xMax) * boardHeight;
   const parts = [];
 
-  parts.push(`<svg class="fingerboard-svg" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg" role="img">`);
+  parts.push(`<svg class="fingerboard-svg" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${escapeXml(`${keyDisplayLabel(key, modeId)} ${modeLabel(modeId)} violin fingerboard chart with notes, scale patterns, and positions`)}">`);
   parts.push(`<title>${escapeXml(`${keyDisplayLabel(key, modeId)} ${modeLabel(modeId)} ${t("chartName")}`)}</title>`);
   parts.push(`<rect x="0" y="0" width="${width}" height="${height}" rx="18" fill="#f8efda"/>`);
   parts.push(`<rect x="${boardLeft}" y="${boardTop}" width="${boardRight - boardLeft}" height="${boardBottom - boardTop}" rx="28" fill="#2a211d"/>`);
@@ -499,7 +499,7 @@ function makeCard(key, keyIndex, mode, maxSemitone, scaleLength) {
   media.innerHTML = makeFingerboardSvg(key, keyIndex, mode, maxSemitone, scaleLength);
   media.tabIndex = 0;
   media.setAttribute("role", "img");
-  media.setAttribute("aria-label", `${key.label} ${modeLabel(modeId)} ${t("chartName")}`);
+  media.setAttribute("aria-label", `${key.label} ${modeLabel(modeId)} violin fingerboard chart with notes, scale patterns, and positions`);
   media.title = t("clickToZoom");
   media.addEventListener("click", () => openLightbox(key, keyIndex, mode, maxSemitone, scaleLength));
   media.addEventListener("keydown", (event) => {
