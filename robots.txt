@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://xiaoxiao0413.github.io/violin-fingerboard-map/sitemap.xml
+Sitemap: https://xiaoxiao0413.github.io/violin-fingerboard-chart/sitemap.xml
