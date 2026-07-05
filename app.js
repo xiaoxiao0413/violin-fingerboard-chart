@@ -9,9 +9,9 @@ const LETTER_PC = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 };
 const I18N = {
   "zh-Hans": {
     htmlLang: "zh-CN",
-    pageTitle: "小提琴指板图",
+    pageTitle: "violin-fingerboard-chart",
     brandEyebrow: "小提琴指板图",
-    appTitle: "Violin Fingerboard",
+    appTitle: "violin-fingerboard-chart",
     circleTitle: "五度圈",
     circleCenter: "五度圈",
     circleSub: "大小调",
@@ -42,9 +42,9 @@ const I18N = {
   },
   "zh-Hant": {
     htmlLang: "zh-Hant",
-    pageTitle: "小提琴指板圖",
+    pageTitle: "violin-fingerboard-chart",
     brandEyebrow: "小提琴指板圖",
-    appTitle: "Violin Fingerboard",
+    appTitle: "violin-fingerboard-chart",
     circleTitle: "五度圈",
     circleCenter: "五度圈",
     circleSub: "大小調",
@@ -75,9 +75,9 @@ const I18N = {
   },
   en: {
     htmlLang: "en",
-    pageTitle: "Violin Fingerboard Chart",
-    brandEyebrow: "Violin Fingerboard Chart",
-    appTitle: "Violin Fingerboard",
+    pageTitle: "violin-fingerboard-chart",
+    brandEyebrow: "violin-fingerboard-chart",
+    appTitle: "violin-fingerboard-chart",
     circleTitle: "Circle of Fifths",
     circleCenter: "Fifths",
     circleSub: "Major / minor",
